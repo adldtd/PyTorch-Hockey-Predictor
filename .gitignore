@@ -1,0 +1,15 @@
+/models
+/screenshots
+/__pycache__
+/networks
+losses.txt
+/hockey-scraper/data
+/hockey-scraper/databases
+/hockey-scraper/checklist.txt
+/hockey-scraper/combiner.js
+/hockey-scraper/connector.js
+/hockey-scraper/normalizer.js
+/hockey-scraper/repair.js
+/hockey-scraper/requirements.txt
+model10
+model10.5
