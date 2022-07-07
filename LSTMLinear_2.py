@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-class FeedForwardAttention(nn.Module): #The main model
+class LSTMLinear(nn.Module): #The main model
 
     def __init__(self, device, info = 1):
         super().__init__()

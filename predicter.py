@@ -1,6 +1,6 @@
 import requests
 import json
-from network10_5model import FeedForwardAttention
+from LSTMLinear_2 import LSTMLinear
 import torch
 import torch.nn as nn
 
@@ -12,7 +12,7 @@ teams = json.load(open("hockey-scraper/teams.json", encoding = "utf-8"))
 
 print("Loading model...")
 device = torch.device("cuda:0")
-model = FeedForwardAttention(device)
+model = LSTMLinear(device)
 model.cuda(device)
 model.train(False)
 print(model.load_state_dict(torch.load(MODEL_NAME)))
