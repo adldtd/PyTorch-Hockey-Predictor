@@ -3,7 +3,8 @@
 /__pycache__
 /networks
 losses.txt
-/hockey-scraper/data
+/hockey-scraper/data/*
+!/hockey-scraper/data/order.json
 /hockey-scraper/databases
 /hockey-scraper/checklist.txt
 /hockey-scraper/combiner.js
