@@ -7,8 +7,8 @@ import torch.nn as nn
 MODEL_NAME = "model10.5"
 INFO = 1 #How many games are fed into the model at once
 softmax = nn.Softmax(dim = 0)
-order = json.load(open("hockey-scraper/order.json", encoding = "utf-8"))
-teams = json.load(open("hockey-scraper/teams.json", encoding = "utf-8"))
+order = json.load(open("hockey-scraper/data/order.json", encoding = "utf-8"))
+teams = json.load(open("hockey-scraper/data/teams.json", encoding = "utf-8"))
 
 print("Loading model...")
 device = torch.device("cuda:0")
