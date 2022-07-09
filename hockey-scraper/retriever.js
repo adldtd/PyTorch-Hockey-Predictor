@@ -97,14 +97,15 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
     
     let clan = clans[indexe];
     let seasonInfo = "";
+    let pivotYear = year;
 
-    let seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + year + "_games.html";
+    let seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + pivotYear + "_games.html";
     await new Promise((resolve) => setTimeout(resolve, TIME_OUT));
     seasonInfo = await axios.get(seasonLink, config);
     
     while (seasonInfo.status !== 200) {
-      year--;
-      seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + year + "_games.html";
+      pivotYear--;
+      seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + pivotYear + "_games.html";
       await new Promise((resolve) => setTimeout(resolve, TIME_OUT));
       seasonInfo = await axios.get(seasonLink, config);
     }
@@ -114,12 +115,14 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
     newAllGames = newAllGames.reverse(); //Start with the most recent games
     allGames.push(newAllGames); //Stores previous seasons
     
-    seasonsRecorded[clan][year] = newAllGames;
+    seasonsRecorded[clan][pivotYear] = newAllGames;
 
     let finding = true; //If false, means that the program is "collecting" the previous games
     let indGames = 0; //How many previous games were recorded so far
     let previousGame = {};
     let nextGame = {};
+
+    //console.log("big");
 
     while (indGames < number_games) {
       
@@ -136,24 +139,17 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
           else
             gameDate = game.split("<", 1)[0];
 
-          //console.log(gameDate);
-          //console.log((new Date(gameDate)).getTime());
-          //console.log(numDate);
-
           if ((new Date(gameDate)).getTime() > numDate) //This is not the date you're looking for
             continue;
           else if ((new Date(gameDate)).getTime() == numDate) { //Found the date
 
-            //console.log("woooo... woo");
-
             nextGame["team"] = clan;
             nextGame["date"] = gameDate;
-            nextGame["season"] = year - 2000 + 1;
+            nextGame["season"] = pivotYear - 2000 + 1;
             
             let opponent = game.split('data-stat="opp_name" csk="', 2)[1].substring(0, 3);
             if ((clan === team && opponent !== opp) || (clan === opp && opponent !== team)) {
               res.status(404).send("Game not found");
-              //console.log("CHICKEN");
               data = [];
               return;
             }
@@ -189,7 +185,6 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
 
           } else { //No such game exists
             res.status(404).send("Game not found");
-            //console.log("TURKEY");
             data = [];
             return;
           }
@@ -240,7 +235,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
           nextGame["teamLosses"] = parseInt(game.split('data-stat="losses" >', 2)[1].split("<", 1)[0]);
 
           let ties = 0;
-          if (year < 2006) //When ties were removed
+          if (pivotYear < 2006) //When ties were removed
             ties = parseInt(game.split('data-stat="ties" >', 2)[1].split("<", 1)[0]);
           nextGame["teamTies"] = ties;
 
@@ -262,7 +257,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
           let players = gameinfo.data.split("header_scoring"); //Splits the players up, into two teams
           players = players.slice(1, 3);
 
-          if (year > 2007) //When advanced stats become available; screws up some of the scraping
+          if (pivotYear > 2007) //When advanced stats become available; screws up some of the scraping
             players[1] = players[1].split("All Situations", 1)[0];
 
           if (field === "home") //In home games, the opposing team's stats are listed first
@@ -425,7 +420,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
 
           previousGame["teamPlayers"] = teamPlayers;
           previousGame["oppPlayers"] = oppPlayers;
-          previousGame["season"] = year - 2000 + 1;
+          previousGame["season"] = pivotYear - 2000 + 1;
 
           data.push({});
           data[data.length - 1]["previousGame"] = previousGame;
@@ -440,7 +435,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
 
             nextGame["team"] = clan;
             nextGame["date"] = gameDate;
-            nextGame["season"] = year - 2000 + 1;
+            nextGame["season"] = pivotYear - 2000 + 1;
 
             nextGame["opp"] = opponent;
             nextGame["field"] = field;
@@ -470,11 +465,11 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
 
       if (indGames < number_games) {
 
-        year--;
-        if (year === 2005)
-          year--;
+        pivotYear--;
+        if (pivotYear === 2005)
+          pivotYear--;
 
-        seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + year + "_games.html";
+        seasonLink = "https://www.hockey-reference.com/teams/" + clan + "/" + pivotYear + "_games.html";
         await new Promise((resolve) => setTimeout(resolve, TIME_OUT));
         seasonInfo = await axios.get(seasonLink, config);
 
@@ -489,7 +484,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
         newAllGames = newAllGames.reverse();
         allGames.push(newAllGames);
 
-        seasonsRecorded[clan][year] = newAllGames;
+        seasonsRecorded[clan][pivotYear] = newAllGames;
       }
 
     }
@@ -503,9 +498,9 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
   for (indexe in clans) { //Retrieve next game opponent information, as well as streaks
 
     let clan = clans[indexe];
-    for (year in seasonsRecorded[clan]) { //Years are placed in ascending integer order in a JS object
+    for (y in seasonsRecorded[clan]) { //Years are placed in ascending integer order in a JS object
       
-      let allGame = seasonsRecorded[clan][year];
+      let allGame = seasonsRecorded[clan][y];
       let streak = 0;
       let streakType = "";
 
@@ -700,7 +695,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
               await new Promise((resolve) => setTimeout(resolve, TIME_OUT));
               seasonInfo = await axios.get(seasonLink, config);
 
-              if (seasonInfo.status !== 200 || year === 1997) { //Cutoff date
+              if (seasonInfo.status !== 200 || startYear === 1997) { //Cutoff date
                 res.status(404).send("Games not found")
                 data = [];
                 return;
@@ -730,10 +725,10 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
                 if (oppStreakType === "") { //Our worst nightmare; get the previous season
 
                   startYear--;
-                  if (year === 2005)
+                  if (startYear === 2005)
                     startYear--;
 
-                  seasonLink = "https://www.hockey-reference.com/teams/" + opponent + "/" + year + "_games.html";
+                  seasonLink = "https://www.hockey-reference.com/teams/" + opponent + "/" + startYear + "_games.html";
                   await new Promise((resolve) => setTimeout(resolve, TIME_OUT));
                   seasonInfo = await axios.get(seasonLink, config);
 
@@ -823,7 +818,7 @@ app.post("/fetch", async function (req, res) { //Request will have the team name
                 gamesRecorded[clan][gameDate].nextGame.oppLosses = parseInt(oppPreviousGame.split('data-stat="losses" >', 2)[1].split("<", 1)[0]);
 
                 let ties = 0;
-                if (year < 2006) //When ties were removed
+                if (startYear < 2006) //When ties were removed
                   ties = parseInt(oppPreviousGame.split('data-stat="ties" >', 2)[1].split("<", 1)[0]);
                 gamesRecorded[clan][gameDate].nextGame.oppTies = ties;
 
