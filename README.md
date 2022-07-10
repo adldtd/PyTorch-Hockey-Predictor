@@ -5,14 +5,21 @@ A machine learning project using both NodeJS and PyTorch to scrape, process, and
 ## Contents
 
 **LSTM_Linear.py**: The PyTorch neural network. Used by network.py and predicter.py to train and output predictions.
+
 **network.py**: The neural network trainer. Loads a certain model, and trains for a certain amount of epochs (both modifiable in the last six lines of the program); uplinks with database.js.
 predicter.py: Uses a pre-trained neural network to predict hockey data; uplinks with retriever.js.
 
+
 **teams.js**: Scrapes all hockey teams from a certain start date (default: 2000) from https://www.hockey-reference.com, and saves them in a data folder as teams.json.
+
 **games.js**: Scrapes hockey game data for the teams contained in teams.json from a certain start date (default: 2000) from hockey-reference; saves each as "games{three letter team indicator}.json" in the data folder.
+
 **database.js**: Retrieves, crunches, and formats the game data downloaded into trainable info, and stores it all in a javascript array. The program runs as a server (default: at 127.0.0.1 at port 3000), from which network.py can communicate with through HTTP during runtime. In short, database.js "feeds" python data as it trains the neural net.
+
 **retriever.js**: A sort-of "combination" of the functionality of games.js and teams.js; retrieves data from https://www.hockey-reference.com, and sends it as a json string upon request. Like database.js, the program also runs as a server (default: 127.0.0.1 at port 3000), which predicter.py uses to fetch data to make predictions on.
+
 **functions.js**: Stores reusable functions for different js files.
+
 
 ***NOTE***: Scraping scripts like teams.js, games.js are for educational purposes only. https://www.hockey-reference.com, as it states in the Terms and Conditions, forbids the "...use (of) any automated means to access or use the Site, including scripts, bots, scrapers, data miners, or similar software, in a manner that adversely impacts site performance or access..." Thus, please excercise caution and care when editing or using the former two programs.
 
