@@ -18,6 +18,7 @@ var borders = [];
 var main_array = []; //Used for ordering all of the data; contains all trainable games
 var eval_array = []; //Used for testing evaluation purposes; contains data from March of 2022 to beyond
 const GAME_SIZE = 1; //Extremely important constant; how many previous games the program collects for predictions
+const USE_PLAYERS = false; //Whether to include individual player data; false by default
 
 var avgWeight = 0; //Averages are used when height/weight data is unavailable
 var weights = 0;
@@ -175,7 +176,7 @@ function crunchData(default_array) {
     previousOppGames[previousOppGames.length - 1]["nextGame"]["result"] = thatNextOppGame["previousGame"]["result"];
 
     
-    chunk = functions.crunchGames(previousTeamGames, previousOppGames, order, true, false);
+    chunk = functions.crunchGames(previousTeamGames, previousOppGames, order, positions, true, USE_PLAYERS);
     data.push(chunk);
     default_array[ind] = data;
     
@@ -405,7 +406,7 @@ orderGames(main_array, eval_array, GAME_SIZE, allTeams, teams);
 crunchData(main_array);
 crunchData(eval_array);
 console.log("Data formatted\n");
-//fs.writeFileSync("data/order.json", JSON.stringify(order, null, 2));
+//fs.writeFileSync("data/positions.json", JSON.stringify(positions, null, 2));
 console.log("Dataset size: " + main_array.length); //All indexable games
 console.log("Evaluation size: " + eval_array.length); //All evaluational games
 
@@ -460,7 +461,7 @@ app.get("/size_eval", function (req, res) {
 
 /*
 
-Past: (TOTAL 1389 + 1 padding, * 15 * 2 = 41700); WITHOUT TEAM STATS, DIMENSIONALITY IS JUST 77
+Past: (TOTAL 1389); WITHOUT PLAYER STATS, DIMENSIONALITY IS JUST 77
 Team: 35 features
 Opp: 35
 23 team players (20 fielders, 3 goalies), and 2 for each team: (TOTAL 1312)
@@ -497,7 +498,7 @@ Type: 1
 Distance to Current Game: 1
 Seasonal Distance: 1
 
-Future: (TOTAL 84)
+Future: (TOTAL 84); WITH "AVERAGE" STATS, DIM IS 108
 Team: 35
 Opp: 35
 Team Stats (2 for each): (TOTAL 12)

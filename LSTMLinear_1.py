@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-class LSTMLinear(nn.Module): #The main model
+class LSTMLinear(nn.Module): #The main model (NO PLAYER DATA)
 
     def __init__(self, device, info = 1):
         super().__init__()
@@ -9,18 +9,17 @@ class LSTMLinear(nn.Module): #The main model
         self.device = device
         self.info = info
         
-        self.LSTM1 = nn.LSTM(161, 500, bias = True, batch_first = False)
-        self.lDrop1 = nn.Dropout(0.4)
+        self.LSTM1 = nn.LSTM(185, 500, bias = True, batch_first = False)
+        self.lDrop1 = nn.Dropout(0.2)
         self.linear1 = nn.Linear(500, 100, bias = True)
-        self.drop1 = nn.Dropout(0.3)
+        self.drop1 = nn.Dropout(0.1)
         self.linAct1 = nn.ReLU()
         self.LSTM2 = nn.LSTM(100, 300, bias = True, batch_first = False)
-        self.lDrop2 = nn.Dropout(0.4)
+        self.lDrop2 = nn.Dropout(0.2)
         self.linear2 = nn.Linear(info * 300, 60, bias = True)
-        self.drop2 = nn.Dropout(0.3)
+        self.drop2 = nn.Dropout(0.1)
         self.linAct2 = nn.ReLU()
         self.linear3 = nn.Linear(60, 2, bias = True)
-        #self.softmax = nn.Softmax(dim = 1)
 
         self.hidden_cell1 = (torch.zeros(1, 1, 500).to(device), torch.zeros(1, 1, 500).to(device)) #Empty hidden state
         self.hidden_cell2 = (torch.zeros(1, 1, 300).to(device), torch.zeros(1, 1, 300).to(device))
@@ -36,11 +35,9 @@ class LSTMLinear(nn.Module): #The main model
         self.linear2.bias.data.uniform_(-RANGE, RANGE)
         self.linear3.weight.data.uniform_(-RANGE, RANGE)
         self.linear3.bias.data.uniform_(-RANGE, RANGE)
-        #self.linear4.weight.data.uniform_(-RANGE, RANGE)
-        #self.linear4.bias.data.uniform_(-RANGE, RANGE)
 
     
-    def forward(self, input, collecting = False): #Input will be made up of two parts
+    def forward(self, input, collecting = False): #The network is not always making a prediction, it may be "collecting" information first
         
         z, self.hidden_cell1 = self.LSTM1(input, self.hidden_cell1)
         z = self.lDrop1(z)

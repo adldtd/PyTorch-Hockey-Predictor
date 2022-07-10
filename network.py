@@ -21,15 +21,7 @@ class GameDataset(torch.utils.data.Dataset):
         if (result.status_code == 400):
           raise Exception("400 Bad Request: " + result.text)
 
-        #print(result.text)
         result = json.loads(result.text)
-        #for k, game in enumerate(result[0][0][0]):
-        #    for i, val in enumerate(game):
-        #        if (type(val) == NoneType):
-        #            print(i)
-        #            print(game)
-        #            print(val)
-        #            print(k)
         data = [torch.FloatTensor(result[0][0]).to(self.device)[None, :].swapdims(0, 1), torch.FloatTensor(result[0][1]).to(self.device)[None, :].swapdims(0, 1)]
         return data
 
@@ -77,22 +69,6 @@ def collate(batch):
 
     return data
 
-
-
-BATCH_SIZE = 64
-
-device = torch.device("cuda:0")
-INFO = 1
-ffa = LSTMLinear(device, INFO) #The model
-ffa.cuda(device)
-
-lossFn = nn.BCEWithLogitsLoss()
-optimizer = torch.optim.Adam(ffa.parameters())
-
-dataset = GameDataset("127.0.0.1:3000", device)
-loader = torch.utils.data.DataLoader(dataset, batch_size = BATCH_SIZE, shuffle = True,  collate_fn = collate)
-
-evalDataset = EvaluationalGameDataset("127.0.0.1:3000", device)
 
 
 def trainEpoch(ffa, dataset, loader, evalDataset, lossFn, optimizer, BATCH_SIZE):
@@ -187,6 +163,7 @@ def evaluate(ffa, evalDataset, lossFn, previousPercentCorrect, modelName, save =
     if (previousPercentCorrect < percentCorrect):
         previousPercentCorrect = percentCorrect
         if (save):
+            print(modelName)
             torch.save(ffa.state_dict(), modelName)
     
     return previousPercentCorrect
@@ -206,9 +183,25 @@ def train(ffa, EPOCHS, dataset, loader, evalDataset, lossFn, optimizer, BATCH_SI
 
 
 
+BATCH_SIZE = 64
+
+device = torch.device("cuda:0")
+INFO = 1
+ffa = LSTMLinear(device, INFO) #The model
+ffa.cuda(device)
+
+lossFn = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.Adam(ffa.parameters())
+
+dataset = GameDataset("127.0.0.1:3000", device)
+loader = torch.utils.data.DataLoader(dataset, batch_size = BATCH_SIZE, shuffle = True,  collate_fn = collate)
+
+evalDataset = EvaluationalGameDataset("127.0.0.1:3000", device)
+
+
 MODEL_NAME = "model10.5"
 print(ffa.load_state_dict(torch.load(MODEL_NAME)))
 ffa.train(False)
-previousPercentCorrect = evaluate(ffa, evalDataset, lossFn, float('inf'), MODEL_NAME, save = False)
+previousPercentCorrect = evaluate(ffa, evalDataset, lossFn, float('-inf'), MODEL_NAME, save = True)
 EPOCHS = 5
 train(ffa, EPOCHS, dataset, loader, evalDataset, lossFn, optimizer, BATCH_SIZE, previousPercentCorrect, MODEL_NAME)

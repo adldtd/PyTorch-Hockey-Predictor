@@ -1,7 +1,7 @@
 
 module.exports = {
 
-    crunchGames: function (previousTeamGames, previousOppGames, order, returnResults = true, usePlayers = false) {
+    crunchGames: function (previousTeamGames, previousOppGames, order, positions, returnResults = true, usePlayers = false) {
 
         let k = 0; let j = 0; //Combine previous team and opp games
         let previousGames = [];
@@ -82,12 +82,12 @@ module.exports = {
                 if (height === "" || height === undefined || height === null)
                     playerInfo[26] = 0; //Distance from average height and weight
                 else
-                    playerInfo[26] = (height - avgHeight) / 100;
+                    playerInfo[26] = (height - 185) / 100;
                 let weight = playerStats["weight"];
                 if (weight === "" || weight === undefined || weight === null)
                     playerInfo[27] = 0;
                 else
-                    playerInfo[27] = (weight - avgWeight) / 100;
+                    playerInfo[27] = (weight - 91) / 100;
                 
                 let index = 0;
                 if ("shoots" in playerStats) {
@@ -119,12 +119,12 @@ module.exports = {
                 if (height === "" || height === undefined || height === null)
                     playerInfo[7] = 0;
                 else
-                    playerInfo[7] = (height - avgHeight) / 100;
+                    playerInfo[7] = (height - 185) / 100;
                 let weight = playerStats["weight"];
                 if (weight === "" || weight === undefined || weight === null)
                     playerInfo[8] = 0;
                 else
-                    playerInfo[8] = (weight - avgWeight) / 100;
+                    playerInfo[8] = (weight - 91) / 100;
 
                 let index = 0;
                 if ("shoots" in playerStats) {
@@ -192,12 +192,12 @@ module.exports = {
                 if (height === "" || height === undefined || height === null)
                     playerInfo[26] = 0;
                 else
-                    playerInfo[26] = (height - avgHeight) / 60;
+                    playerInfo[26] = (height - 185) / 60;
                 let weight = playerStats["weight"];
                 if (weight === "" || weight === undefined || weight === null)
                     playerInfo[27] = 0;
                 else
-                    playerInfo[27] = (weight - avgWeight) / 60;
+                    playerInfo[27] = (weight - 91) / 60;
                 
                 let index = 0;
                 if ("shoots" in playerStats) {
@@ -229,12 +229,12 @@ module.exports = {
                 if (height === "" || height === undefined || height === null)
                     playerInfo[7] = 0;
                 else
-                    playerInfo[7] = (height - avgHeight) / 100;
+                    playerInfo[7] = (height - 185) / 100;
                 let weight = playerStats["weight"];
                 if (weight === "" || weight === undefined || weight === null)
                     playerInfo[8] = 0;
                 else
-                    playerInfo[8] = (weight - avgWeight) / 100;
+                    playerInfo[8] = (weight - 91) / 100;
 
                 let index = 0;
                 if ("shoots" in playerStats) {

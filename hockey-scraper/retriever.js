@@ -9,8 +9,10 @@ app.use(express.json()); //For recieving index data
 var teams = JSON.parse(fs.readFileSync("data/teams.json"));
 var playerReference = JSON.parse(fs.readFileSync("data/playerReference.json"));
 var order = JSON.parse(fs.readFileSync("data/order.json"));
+var positions = JSON.parse(fs.readFileSync("data/positions.json"));
 var data = []; //For the prediction
 const TIME_OUT = 1000; //ms to wait before sending a request
+const USE_PLAYERS = false; //Whether to include player data when crunching data
 var GAME_SIZE = 1;
 
 var config =
@@ -975,7 +977,7 @@ app.get("/crunch", function (req, res) {
   let previousTeamGames = data.slice(0, GAME_SIZE).reverse();
   let previousOppGames = data.slice(GAME_SIZE, data.length).reverse();
 
-  past = functions.crunchGames(previousTeamGames, previousOppGames, order, false, false)[0];
+  past = functions.crunchGames(previousTeamGames, previousOppGames, order, positions, false, USE_PLAYERS)[0];
 
   data = []; //Clear for further requests
   res.status(200).send(JSON.stringify(past));

@@ -1,6 +1,6 @@
 import requests
 import json
-from LSTMLinear_2 import LSTMLinear
+from LSTMLinear_1 import LSTMLinear
 import torch
 import torch.nn as nn
 
