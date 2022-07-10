@@ -7,7 +7,8 @@ A machine learning project using both NodeJS and PyTorch to scrape, process, and
 **LSTM_Linear.py**: The PyTorch neural network. Used by network.py and predicter.py to train and output predictions.
 
 **network.py**: The neural network trainer. Loads a certain model, and trains for a certain amount of epochs (both modifiable in the last six lines of the program); uplinks with database.js.
-predicter.py: Uses a pre-trained neural network to predict hockey data; uplinks with retriever.js.
+
+**predicter.py**: Uses a pre-trained neural network to predict hockey data; uplinks with retriever.js.
 
 
 **teams.js**: Scrapes all hockey teams from a certain start date (default: 2000) from https://www.hockey-reference.com, and saves them in a data folder as teams.json.
