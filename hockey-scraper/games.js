@@ -10,39 +10,39 @@ var games = [];
   PreviousGame: object:
     Team: 3 letter str
     Players: list of lists, the latter which includes:
-    Name: string (will probably be removed during training)
-    TOI: float, in minutes
-    POS: string
-    Shifts: integer
-    PlusMinus: integer
-    Goals: integer
-    Assists: integer
-    Shots: integer
-    PenaltyMin: integer
-    Age: float, in years
-    Experience: float; calculated by (current age) - (age at first game)
-    Weight: integer
-    Shoots: string
+      Name: string
+      TOI: float
+      POS: string
+      Shifts: integer
+      PlusMinus: integer
+      Goals: integer
+      Assists: integer
+      Shots: integer
+      PenaltyMin: integer
+      Age: float, in years
+      Experience: float
+      Weight: integer
+      Shoots: string
     Goalies: list of lists, the latter which includes:
-    Name: string (will probably be removed during training)
-    TOI: float, in minutes
-    GA: integer
-    SA: integer
-    Shutouts: integer; cumulative from the start of the season
-    PenaltyMin: integer
-    Age: float, in years
-    Weight: integer
-    Catches: string
-    Opp: 3 letter str
-    Players: same as before
-    Goalies: same as before
-    TeamScore: integer
-    OppScore: integer
-    Result: float, with 1 being victory, 0 being loss, and 0.5 being tie
-    Field: string, either home or away
-    Type: string, either normal, playoff, or final
-    Date: string
-    Season: integer, with 1 being the season in 2000
+      Name: string
+      TOI: float, in minutes
+      GA: integer
+      SA: integer
+      Shutouts: integer; cumulative from the start of the season
+      PenaltyMin: integer
+      Age: float, in years
+      Weight: integer
+      Catches: string
+      Opp: 3 letter str
+      Players: same as before
+      Goalies: same as before
+      TeamScore: integer
+      OppScore: integer
+      Result: float, with 1 being victory, 0 being loss, and 0.5 being tie
+      Field: string, either home or away
+      Type: string, either normal, playoff, or final
+      Date: string
+      Season: integer, with 1 being the season in 2000
   NextGame: object:
     Team: 3 letter str, same as before
     Wins: integer
@@ -63,20 +63,15 @@ var games = [];
 
 var playerReference = {}; //Uses player id as key, and an object as the contents, containing name, weight, position, age at first game, and date of first game
 var listOfTeams = {};
-const TIME_OUT = 100; //How many ms to wait before pinging the server again
+const TIME_OUT = 1000; //How many ms to wait before pinging the server again
 
-//games = JSON.parse(fs.readFileSync("data/games" + "CAR" + ".json"));
 playerReference = JSON.parse(fs.readFileSync("data/playerReference.json"));
 listOfTeams = JSON.parse(fs.readFileSync("data/teams.json"));
 
 var config =
 {
   headers:
-  {
-    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
-    cookie: "is_live=true; sr_note_box_countdown=0; srcssfull=yes"
-  },
+  {},
   timeout: 25000,
   responseType: "html",
   responseEncoding: "utf-8",
@@ -87,7 +82,7 @@ var config =
 (async () => { //Main
 
   const START = 2000; //Year to start
-  let ignoreList = {"PHI":"", "TBL":"", "COL":"", "MDA":"", "NYR":"", "OTT":"", "ANA":"", "ATL":"", "CAR":"", "WPG":"", "NJD":"", "PIT":"", "TOR":"", "NYI":"", "MTL":"", "BUF":"", "FLA":"", "BOS":"", "WSH":"", "DET":"", "STL":"", "CHI":"", "NSH":"", "VAN":"", "SJS":"", "PHX":"", "LAK":"", "EDM":"", "DAL":"", "CGY":"", "CBJ":"", "MIN":"", "ARI":"", "VEG":"", "SEA":""};
+  let ignoreList = {};
   let special = []; //Teams that need to be worked with manually
 
   for (team in listOfTeams) {
@@ -100,7 +95,7 @@ var config =
 
     let year = START;
 
-    switch (team) { //Special cases
+    switch (team) { //Special cases (NOT COMPLETED FOR ALL TEAMS)
       case "ANA": //Anaheim Ducks
         year = 2007;
         break;

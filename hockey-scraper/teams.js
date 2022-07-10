@@ -13,11 +13,7 @@ var teams = {}; //Object; the 3 letter team indicator is the key, and the team n
 var config =
 {
   headers:
-  {
-    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
-    cookie: "is_live=true; sr_note_box_countdown=0; srcssfull=yes"
-  },
+  {},
   timeout: 25000,
   responseType: "html",
   responseEncoding: "utf-8",
@@ -26,9 +22,6 @@ var config =
 
 
 (async () => { //Main
-
-  //const browser = await pup.launch(); //Set up puppeteer for scraping
-  //const page = await browser.newPage();
 
   res = await axios.get("https://www.hockey-reference.com/leagues/NHL_" + year + ".html", config);
   
@@ -76,10 +69,6 @@ var config =
               }
             }
 
-            //console.log(resSeason);
-            //console.log(indicator + "/" + year + ".html");
-            //console.log(resSeason.data.split('Previous Season', 2)[1]);
-
             let seasonData = resSeason.data.split("prevnext", 2)[1].split("</div>", 2)[0];
 
             if (seasonData.includes("Previous Season"))
@@ -108,8 +97,6 @@ var config =
 
     if (year === 2005)
       year++;
-
-    //console.log(year);
 
     res = await axios.get("https://www.hockey-reference.com/leagues/NHL_" + year + ".html", config);
   }

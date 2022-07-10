@@ -10,17 +10,13 @@ var teams = JSON.parse(fs.readFileSync("data/teams.json"));
 var playerReference = JSON.parse(fs.readFileSync("data/playerReference.json"));
 var order = JSON.parse(fs.readFileSync("data/order.json"));
 var data = []; //For the prediction
-const TIME_OUT = 500; //ms to wait before sending a request
+const TIME_OUT = 1000; //ms to wait before sending a request
 var GAME_SIZE = 1;
 
 var config =
 {
   headers:
-  {
-    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
-    cookie: "is_live=true; sr_note_box_countdown=0; srcssfull=yes"
-  },
+  {},
   timeout: 25000,
   responseType: "html",
   responseEncoding: "utf-8",
