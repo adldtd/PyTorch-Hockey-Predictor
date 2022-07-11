@@ -4,7 +4,6 @@ import torch
 import requests #For communicating with javascript
 import json
 import random
-from LSTMLinear_2 import LSTMLinear
 
 
 
@@ -163,7 +162,6 @@ def evaluate(ffa, evalDataset, lossFn, previousPercentCorrect, modelName, save =
     if (previousPercentCorrect < percentCorrect):
         previousPercentCorrect = percentCorrect
         if (save):
-            print(modelName)
             torch.save(ffa.state_dict(), modelName)
     
     return previousPercentCorrect
@@ -183,6 +181,7 @@ def train(ffa, EPOCHS, dataset, loader, evalDataset, lossFn, optimizer, BATCH_SI
 
 
 
+from LSTMLinear_1 import LSTMLinear
 BATCH_SIZE = 64
 
 device = torch.device("cuda:0")
@@ -202,6 +201,6 @@ evalDataset = EvaluationalGameDataset("127.0.0.1:3000", device)
 MODEL_NAME = "model10.5"
 print(ffa.load_state_dict(torch.load(MODEL_NAME)))
 ffa.train(False)
-previousPercentCorrect = evaluate(ffa, evalDataset, lossFn, float('-inf'), MODEL_NAME, save = True)
-EPOCHS = 5
+previousPercentCorrect = evaluate(ffa, evalDataset, lossFn, float('-inf'), MODEL_NAME, save = False)
+EPOCHS = 10
 train(ffa, EPOCHS, dataset, loader, evalDataset, lossFn, optimizer, BATCH_SIZE, previousPercentCorrect, MODEL_NAME)
